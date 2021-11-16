@@ -1,0 +1,3 @@
+#/usr/bin/env bash
+
+nix-instantiate --eval -E "((import ./. {}) ($*)).trivialized" --strict --json
