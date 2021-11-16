@@ -2,7 +2,7 @@
 { config, options, ...}: 
 let
   inherit (lib) optionAttrSetToDocList types isOption isDerivation tryEval;
-  inherit (builtins) mapAttrs typeOf replaceStrings isFunction;
+  inherit (builtins) mapAttrs typeOf replaceStrings isFunction listToAttrs;
   optionList = optionAttrSetToDocList options;
   trivialize = v:
     if (types.attrsOf types.anything).check v then mapAttrs (k: v: trivialize v) v
@@ -18,5 +18,5 @@ let
   ;
 in {
   inherit trivialize;
-  trivialized = trivialize optionList;
+  trivialized = listToAttrs (map (v: {name = v.name; value = v;}) (trivialize optionList));
 }
