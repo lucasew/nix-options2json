@@ -1,5 +1,5 @@
 [tools]
-"github:kamadorueda/alejandra" = "3.0.0"
+"ubi:kamadorueda/alejandra" = "3.0.0"
 shellcheck = "0.10.0"
 shfmt = "3.10.0"
 
@@ -10,7 +10,7 @@ lint = { depends = ["lint:*"] }
 "fmt:nix" = "alejandra ."
 "fmt:shell" = "shfmt -w dump_expr"
 fmt = { depends = ["fmt:*"] }
-test = 'if [ -x "$(command -v nix-instantiate)" ]; then ./dump_expr "{}"; else echo "Skipping test: nix-instantiate not found"; fi'
+test = 'if [ -x "$(command -v nix-instantiate)" ]; then ./dump_expr "{ config = {}; options = {}; }"; else echo "Skipping test: nix-instantiate not found"; fi'
 install = 'echo "No dependencies to install"'
 codegen = 'echo "No codegen"'
 ci = { depends = ["lint", "test"] }
