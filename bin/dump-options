@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Find the project root directory (one level up from this script)
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd)"
+
+# Import the default.nix from the root directory
+# We pass the root path as a string to import, which works for absolute paths.
+nix-instantiate --eval -E "((import \"${ROOT}\" {}) ($*)).trivialized" --strict --json
