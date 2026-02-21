@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v nix-instantiate &>/dev/null; then
+	echo "Error: nix-instantiate is not installed or not in PATH." >&2
+	exit 1
+fi
+
+if [ $# -eq 0 ]; then
+	echo "Usage: $0 <nix-expression-arguments>"
+	echo "Example: $0 '{ options = {}; config = {}; }'"
+	exit 1
+fi
+
+if [ ! -f "default.nix" ]; then
+	echo "Error: default.nix not found in current directory. Please run from project root." >&2
+	exit 1
+fi
+
+nix-instantiate --eval -E "((import ./. {}) ($*)).trivialized" --strict --json
