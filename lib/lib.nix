@@ -2,7 +2,7 @@
 { config, options, ...}: 
 let
   inherit (lib) optionAttrSetToDocList types isOption isDerivation tryEval;
-  inherit (builtins) mapAttrs typeOf replaceStrings isFunction listToAttrs;
+  inherit (builtins) mapAttrs typeOf replaceStrings isFunction listToAttrs toString;
   optionList = optionAttrSetToDocList options;
   trivialize = v:
     if (types.attrsOf types.anything).check v then mapAttrs (k: v: trivialize v) v
@@ -13,8 +13,9 @@ let
     else if (types.nullOr (types.oneOf (with types; [int bool]))).check v then v
     else if isOption v then trivialize {_type = "option"; inherit (v) declarations description internal loc name readOnly type visible;}
     else if types.str.check v then v
+    else if typeOf v == "path" then toString v
     else if isFunction v then "<FUNCTION>"
-    else builtins.trace "passed ${typeOf v}" v
+    else "<UNKNOWN: ${typeOf v}>"
   ;
 in {
   inherit trivialize;

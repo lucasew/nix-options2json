@@ -1,0 +1,6 @@
+[tools]
+shellcheck = "0.10.0"
+shfmt = "3.10.0"
+
+[tasks.ci]
+run = "shellcheck dump_expr && shfmt -d dump_expr"
