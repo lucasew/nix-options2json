@@ -1,3 +1,15 @@
 #/usr/bin/env bash
 
+# CLI Tool: Evaluates a target Nix expression and dumps its normalized options as JSON.
+#
+# Usage: ./dump_expr <Nix arguments>
+#
+# Why: Provides a convenient way to preview the serialized JSON structure of a Nix
+# configuration file without manual `builtins.toJSON` calls. It wraps the target
+# expression using `./default.nix` and extracts the `.trivialized` attribute.
+#
+# Note: Security and performance considerations.
+# We are passing `$*` directly into the evaluation string which enables users to inject
+# arbitrary Nix syntax. This uses `--strict` to ensure complete evaluation, but could
+# potentially be vulnerable if executed with untrusted inputs unless `--restrict-eval` is used.
 nix-instantiate --eval -E "((import ./. {}) ($*)).trivialized" --strict --json
