@@ -1,0 +1,1 @@
+- 2026-03-11: [High] Untrusted Nix evaluation allows arbitrary file reads; use --restrict-eval to sandbox nix-instantiate.
