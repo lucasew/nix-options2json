@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 #
 # CLI Wrapper for Nix Options Exporter.
