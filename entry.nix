@@ -1,9 +1,24 @@
+/*
+ * Core Nix Options Serializer.
+ * Extracts, evaluates, and trivializes the options of a given Nix expression into a format suitable for JSON export.
+ * This is injected by `default.nix` and invoked by the `dump_expr` CLI to introspect NixOS/Home Manager configuration schemas.
+ */
 {lib, pkgs, ...}:
 { config, options, ...}: 
 let
   inherit (lib) optionAttrSetToDocList types isOption isDerivation tryEval;
   inherit (builtins) mapAttrs typeOf replaceStrings isFunction listToAttrs;
   optionList = optionAttrSetToDocList options;
+
+  /*
+   * Recursively normalizes a Nix value to strip it of unevaluable structures (like functions)
+   * and resolve derivations to their paths (stripping `/nix/store/` to `nix://`).
+   *
+   * Nuance: We use `tryEval` specifically for derivations to prevent the entire tree
+   * serialization from failing if a single derivation has a broken `drvPath` reference.
+   * Empty/failing derivation evaluations are safely caught and reported as "failed eval".
+   * Unhandled complex types emit a builtins.trace message and pass through, which might break strict JSON eval.
+   */
   trivialize = v:
     if (types.attrsOf types.anything).check v then mapAttrs (k: v: trivialize v) v
     else if (types.listOf types.anything).check v then map (v: trivialize v) v

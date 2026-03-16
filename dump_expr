@@ -1,3 +1,9 @@
 #/usr/bin/env bash
 
+#
+# CLI Wrapper for Nix Options Exporter.
+# Purpose: Wraps the target Nix expression (passed as `$*`) via `./default.nix` and `entry.nix`.
+# This forces the strict evaluation (`--strict`) of the `trivialized` attribute which resolves
+# derivations safely and strips functions, ensuring a clean format for JSON (`--json`) output.
+#
 nix-instantiate --eval -E "((import ./. {}) ($*)).trivialized" --strict --json
