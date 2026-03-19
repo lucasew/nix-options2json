@@ -1,0 +1,1 @@
+- 2024-03-19: [Silently swallowed tryEval errors mask downstream bugs] Watch for tryEval blocks that don't log or report failures when success is false.
